@@ -14,13 +14,22 @@ class Ninja:
         self.frame = pygame.image.load('game_files/sprites/ghost/idle/idle_0.png')
         self.rect = self.frame.get_rect(topleft = init_pos)
 
-        self.anim_buffer = []
-
         self.direction = pygame.math.Vector2()
+
+        self.anim_buffer = []
 
         self.shd_factor = 12  # shadow factor (temporary decision)
 
+        # Energy cooldown variables
+        self.energy_loss = False
+        self.energy_cooldown = 5000
+        self.energy_time = None
 
+        # Movement
+        # Roll cooldown variables
+        self.roll = False
+        self.roll_cooldown = 1000
+        self.roll_time = None
 
     def animation(self, action, frame_count, anim_len):
         for index in range(frame_count):
@@ -55,24 +64,27 @@ class Ninja:
             self.direction.x = 0
 
         # Roll moving
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and not self.roll:
             if self.energy > 0:
-                self.energy -= 1
-                self.roll_factor = 6
-                if self.direction.y == -1 and self.direction.x == 0:
-                    self.animation('roll_up', 1, 1)
-                else:
-                    self.animation('roll_dw', 1, 1)
+                self.roll = True
+                self.roll_time = pygame.time.get_ticks()
+                self.roll_factor = 2
 
-        # print(self.anim_buffer)
+                self.energy_loss = True
+                self.energy_time = pygame.time.get_ticks()
+                self.energy -= 1
+
+
+        # Roll animation handling
+        if self.roll:
+            if self.direction.y == -1 and self.direction.x == 0:
+                self.animation('roll_up', 1, 1)
+            else:
+                self.animation('roll_dw', 1, 1)
 
     def move(self):
         # Movement handling
         self.rect.center += self.direction * self.speed * self.roll_factor
-
-        # Roll handling
-        while self.roll_factor != 1:
-            self.roll_factor -= 1
 
         # Shadow displaying
         # pygame.draw.ellipse(self.surface, (32, 32, 32),
@@ -84,6 +96,23 @@ class Ninja:
         # Ghost displaying
         self.surface.blit(self.frame, (self.rect.center[0], self.rect.center[1]))
 
+    def cooldown(self):
+        current_time = pygame.time.get_ticks()
+
+        # Energy cooldown handling
+        if self.energy_loss:
+            if current_time - self.energy_time >= self.energy_cooldown:
+                self.energy += 1
+                self.energy_loss = False
+
+        # Roll cooldown handling
+        if self.roll:
+            if current_time - self.roll_time >= self.roll_cooldown:
+                self.roll_factor = 1
+                self.roll = False
+
+
+
     def get_hp(self):
         return self.hp
 
@@ -92,4 +121,5 @@ class Ninja:
 
     def render(self):
         self.input()
+        self.cooldown()
         self.move()

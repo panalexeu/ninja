@@ -28,8 +28,8 @@ class Game:
         self.ninja = ninja.Ninja(self.surface, (-8, -8))  # (-8, -8) left corner coordinates for the sprite centre
 
         # UI inits (hp bar, energy bar)
-        self.hp_bar = hp_bar.HpBar(self.surface, (0, 0))
-        self.energy_bar = energy_bar.EnergyBar(self.surface, (0, 9 * self.scale_factor))
+        self.hp_bar = hp_bar.HpBar(self.surface, (1, 0))
+        self.energy_bar = energy_bar.EnergyBar(self.surface, (1, 9 * self.scale_factor))
 
     def run(self):
         while True:

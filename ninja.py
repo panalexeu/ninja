@@ -2,6 +2,8 @@ import math
 
 import pygame
 
+import gun
+
 
 class Ninja:
 
@@ -24,16 +26,19 @@ class Ninja:
         self.cursor_rect = self.cursor.get_rect()
 
         # For gun rotation
-        self.gun = pygame.image.load('game_files/sprites/test/gun_1.png')
+        self.gun = gun.Gun()
         self.mx, self.my = 0, 0
         self.correction_angle = 0
-        self.angle = None
+        self.angle = 0
 
         # Direction Vector
         self.direction = pygame.math.Vector2()
 
         # Animation buffer
         self.anim_buffer = []
+
+        # Projectiles list
+        self.projectiles = []
 
         # Shadow factor
         self.shd_factor = 12  # shadow factor (temporary decision)
@@ -90,15 +95,19 @@ class Ninja:
             else:
                 self.direction.x = 0
 
-        # Action is performed
+        # Action is performed (shot)
         if keys[pygame.K_e]:
-            self.angle += 30
+            # Gun recoil
+            self.angle += self.gun.recoil
+
+            # Projectile initialization
+            self.projectiles.append(self.gun.shot([self.rect.centerx, self.rect.centery], [self.mx, self.my], self.surface))
 
         # Roll moving
         if keys[pygame.K_SPACE] and not self.roll:
             # If we have energy
             if self.energy > 0:
-                # Check did we had any directions before the space pressed if no we perform down roll
+                # Check did we had any directions before the space pressed if not we perform down roll
                 if self.direction.x == 0 and self.direction.y == 0:
                     self.direction.y = 1
 
@@ -136,7 +145,11 @@ class Ninja:
         # Gun displaying
         # line
         # pygame.draw.line(self.surface, (0, 0, 0), (self.rect.centerx + 12, self.rect.centery), (self.mx, self.my), 1)
-        self.surface.blit(pygame.transform.rotate(self.gun, self.angle), (self.rect.center[0] + 12, self.rect.center[1] - 4))
+        self.surface.blit(pygame.transform.rotate(self.gun.gun_sprite, self.angle), (self.rect.center[0] + 12, self.rect.center[1] - 4))
+
+        # Projectiles render
+        for projectile in self.projectiles:
+            projectile.move()
 
         # Cursor displaying
         self.surface.blit(self.cursor, (self.mx, self.my))
@@ -155,12 +168,6 @@ class Ninja:
             if current_time - self.roll_time >= self.roll_cooldown:
                 self.roll_factor = 1
                 self.roll = False
-
-    def get_hp(self):
-        return self.hp
-
-    def get_energy(self):
-        return self.energy
 
     def render(self):
         self.input()

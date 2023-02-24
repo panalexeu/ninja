@@ -49,8 +49,8 @@ class Game:
             self.ninja.render()
 
             # UI renders (hp bar, energy bar)
-            self.hp_bar.render(self.ninja.get_hp(), self.scale_factor)
-            self.energy_bar.render(self.ninja.get_energy(), self.scale_factor)
+            self.hp_bar.render(self.ninja.hp, self.scale_factor)
+            self.energy_bar.render(self.ninja.energy, self.scale_factor)
 
             pygame.display.update()
             self.clock.tick(60)

@@ -2,6 +2,7 @@ import pygame
 
 
 class Ninja:
+
     def __init__(self, surface, init_pos):
         # Stats
         self.hp = 3
@@ -28,7 +29,7 @@ class Ninja:
         # Movement
         # Roll cooldown variables
         self.roll = False
-        self.roll_cooldown = 1000
+        self.roll_cooldown = 500
         self.roll_time = None
 
     def animation(self, action, frame_count, anim_len):
@@ -44,24 +45,26 @@ class Ninja:
         # Idle animation
         self.animation('idle', 1, 1)
 
-        # y-axis moving
-        if keys[pygame.K_UP]:
-            self.direction.y = -1
-            self.animation('mov_up', 1, 1)
-        elif keys[pygame.K_DOWN]:
-            self.direction.y = 1
-        else:
-            self.direction.y = 0
+        # Check do we perform the roll
+        if not self.roll:
+            # y-axis moving
+            if keys[pygame.K_UP]:
+                self.direction.y = -1
+                self.animation('mov_up', 1, 1)
+            elif keys[pygame.K_DOWN]:
+                self.direction.y = 1
+            else:
+                self.direction.y = 0
 
-        # x-axis moving
-        if keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.animation('mov_r', 1, 1)
-        elif keys[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.animation('mov_l', 1, 1)
-        else:
-            self.direction.x = 0
+            # x-axis moving
+            if keys[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.animation('mov_r', 1, 1)
+            elif keys[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.animation('mov_l', 1, 1)
+            else:
+                self.direction.x = 0
 
         # Roll moving
         if keys[pygame.K_SPACE] and not self.roll:
@@ -73,7 +76,6 @@ class Ninja:
                 self.energy_loss = True
                 self.energy_time = pygame.time.get_ticks()
                 self.energy -= 1
-
 
         # Roll animation handling
         if self.roll:
@@ -110,8 +112,6 @@ class Ninja:
             if current_time - self.roll_time >= self.roll_cooldown:
                 self.roll_factor = 1
                 self.roll = False
-
-
 
     def get_hp(self):
         return self.hp

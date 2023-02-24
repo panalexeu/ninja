@@ -6,6 +6,7 @@ import ninja
 import hp_bar
 import energy_bar
 
+
 class Game:
 
     def __init__(self, scale_factor):

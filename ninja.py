@@ -1,3 +1,5 @@
+import math
+
 import pygame
 
 
@@ -10,15 +12,27 @@ class Ninja:
         self.speed = 3
         self.roll_factor = 1  # roll factor
 
+        # Surface on which will be displayed the player
         self.surface = surface
 
+        # Player image load
         self.frame = pygame.image.load('game_files/sprites/ghost/idle/idle_0.png')
-        self.rect = self.frame.get_rect(topleft = init_pos)
+        self.rect = self.frame.get_rect(topleft=init_pos)
 
+        # For gun rotation
+        self.gun = pygame.image.load('game_files/sprites/test/gun_1.png')
+        self.gun_rect = self.gun.get_rect(topleft=init_pos)
+        self.mx, self.my = 0, 0
+        self.correction_angle = 0
+        self.angle = None
+
+        # Direction Vector
         self.direction = pygame.math.Vector2()
 
+        # Animation buffer
         self.anim_buffer = []
 
+        # Shadow factor
         self.shd_factor = 12  # shadow factor (temporary decision)
 
         # Energy cooldown variables
@@ -42,10 +56,17 @@ class Ninja:
         # Getting pressed keys
         keys = pygame.key.get_pressed()
 
+        # Getting mouse input
+        self.mx, self.my = pygame.mouse.get_pos()
+
+        # Mouse calculations
+        dx, dy = self.mx - self.rect.centerx + 12, self.my - self.rect.centery
+        self.angle = math.degrees((math.atan2(-dy, dx))) - self.correction_angle
+
         # Idle animation
         self.animation('idle', 1, 1)
 
-        # Check do we perform the roll
+        # Check do we perform the roll if so input is blocked
         if not self.roll:
             # y-axis moving
             if keys[pygame.K_UP]:
@@ -97,6 +118,11 @@ class Ninja:
 
         # Ghost displaying
         self.surface.blit(self.frame, (self.rect.center[0], self.rect.center[1]))
+
+        # Gun displaying
+        # line
+        # pygame.draw.line(self.surface, (0, 0, 0), (self.rect.centerx + 12, self.rect.centery), (self.mx, self.my), 1)
+        self.surface.blit(pygame.transform.rotate(self.gun, self.angle), (self.rect.center[0] + 12, self.rect.center[1] - 4))
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()

@@ -12,6 +12,9 @@ class Game:
     def __init__(self, scale_factor):
         pygame.init()
 
+        # Turning off the cursor
+        pygame.mouse.set_visible(False)
+
         # Screen and surface for screen scaling init
         self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGHT))
         self.surface = pygame.Surface((settings.SURF_WIDTH, settings.SURF_HEIGHT), pygame.SRCALPHA)

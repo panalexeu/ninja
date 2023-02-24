@@ -19,9 +19,12 @@ class Ninja:
         self.frame = pygame.image.load('game_files/sprites/ghost/idle/idle_0.png')
         self.rect = self.frame.get_rect(topleft=init_pos)
 
+        # Player cursor load
+        self.cursor = pygame.image.load('game_files/sprites/test/cursor.png')
+        self.cursor_rect = self.cursor.get_rect()
+
         # For gun rotation
-        self.gun = pygame.image.load('game_files/sprites/test/sword.png')
-        self.gun_rect = self.gun.get_rect(topleft=init_pos)
+        self.gun = pygame.image.load('game_files/sprites/test/gun_1.png')
         self.mx, self.my = 0, 0
         self.correction_angle = 0
         self.angle = None
@@ -69,19 +72,19 @@ class Ninja:
         # Check do we perform the roll if so input is blocked
         if not self.roll:
             # y-axis moving
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_w]:
                 self.direction.y = -1
                 self.animation('mov_up', 1, 1)
-            elif keys[pygame.K_DOWN]:
+            elif keys[pygame.K_s]:
                 self.direction.y = 1
             else:
                 self.direction.y = 0
 
             # x-axis moving
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d]:
                 self.direction.x = 1
                 self.animation('mov_r', 1, 1)
-            elif keys[pygame.K_LEFT]:
+            elif keys[pygame.K_a]:
                 self.direction.x = -1
                 self.animation('mov_l', 1, 1)
             else:
@@ -134,6 +137,9 @@ class Ninja:
         # line
         # pygame.draw.line(self.surface, (0, 0, 0), (self.rect.centerx + 12, self.rect.centery), (self.mx, self.my), 1)
         self.surface.blit(pygame.transform.rotate(self.gun, self.angle), (self.rect.center[0] + 12, self.rect.center[1] - 4))
+
+        # Cursor displaying
+        self.surface.blit(self.cursor, (self.mx, self.my))
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()

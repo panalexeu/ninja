@@ -8,7 +8,7 @@ class Ninja:
     def __init__(self, surface, init_pos):
         # Stats
         self.hp = 3
-        self.energy = 3
+        self.energy = 5
         self.speed = 3
         self.roll_factor = 1  # roll factor
 
@@ -20,7 +20,7 @@ class Ninja:
         self.rect = self.frame.get_rect(topleft=init_pos)
 
         # For gun rotation
-        self.gun = pygame.image.load('game_files/sprites/test/gun_1.png')
+        self.gun = pygame.image.load('game_files/sprites/test/sword.png')
         self.gun_rect = self.gun.get_rect(topleft=init_pos)
         self.mx, self.my = 0, 0
         self.correction_angle = 0
@@ -63,8 +63,6 @@ class Ninja:
         dx, dy = self.mx - self.rect.centerx + 12, self.my - self.rect.centery
         self.angle = math.degrees((math.atan2(-dy, dx))) - self.correction_angle
 
-        if keys[p]
-
         # Idle animation
         self.animation('idle', 1, 1)
 
@@ -89,13 +87,24 @@ class Ninja:
             else:
                 self.direction.x = 0
 
+        # Action is performed
+        if keys[pygame.K_e]:
+            self.angle += 30
+
         # Roll moving
         if keys[pygame.K_SPACE] and not self.roll:
+            # If we have energy
             if self.energy > 0:
+                # Check did we had any directions before the space pressed if no we perform down roll
+                if self.direction.x == 0 and self.direction.y == 0:
+                    self.direction.y = 1
+
+                # Roll factor enabled and variables for cooldown
                 self.roll = True
                 self.roll_time = pygame.time.get_ticks()
                 self.roll_factor = 2
 
+                # Energy decremented and variables for cooldown
                 self.energy_loss = True
                 self.energy_time = pygame.time.get_ticks()
                 self.energy -= 1

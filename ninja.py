@@ -63,6 +63,8 @@ class Ninja:
         dx, dy = self.mx - self.rect.centerx + 12, self.my - self.rect.centery
         self.angle = math.degrees((math.atan2(-dy, dx))) - self.correction_angle
 
+        if keys[p]
+
         # Idle animation
         self.animation('idle', 1, 1)
 

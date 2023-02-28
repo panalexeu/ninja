@@ -23,6 +23,9 @@ class Level:
         # Pickups
         self.pickups = []
 
+        # Playable surface
+        self.play_surface = pygame.Surface((416, 216))
+
         # Box init
         self.level_box = box.Box(self.surface, (16*5, 16*5))
         self.level_box1 = box.Box(self.surface, (16 * 1, 16 * 2))
@@ -107,7 +110,8 @@ class Level:
                     projectiles.remove(proj)
 
     def back_render(self):
-        self.surface.blit(self.test, (6 * 16, 8 * 16))
+        self.surface.blit(self.play_surface, (32, 32))
+        self.surface.blit(self.test, (0, 19+ 16))
 
     def pickups_render(self):
         for pickup in self.pickups:

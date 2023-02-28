@@ -3,6 +3,7 @@ import math
 import pygame
 
 import gun
+import revolver
 import hp_pickup
 import energy_pickup
 
@@ -23,11 +24,11 @@ class Ninja:
         self.ghost_rect = self.frame.get_rect(topleft=init_pos)
 
         # Player cursor load
-        self.cursor = pygame.image.load('game_files/sprites/test/cursor.png')
+        self.cursor = pygame.image.load('game_files/sprites/mouse/cursor.png')
         # self.cursor_rect = self.cursor.get_rect()
 
         # Gun init
-        self.gun = gun.Gun((self.ghost_rect.centerx, self.ghost_rect.centery), self.surface)
+        self.gun = revolver.Revolver((self.ghost_rect.centerx, self.ghost_rect.centery), self.surface)
 
         # For gun rotation
         self.mx, self.my = 0, 0
@@ -151,7 +152,7 @@ class Ninja:
         # Gun displaying
         self.gun.gun_pos(self.ghost_rect.centerx, self.ghost_rect.centery)
         self.surface.blit(pygame.transform.rotate(self.gun.gun_sprite, self.angle), (self.gun.gun_rect.x, self.gun.gun_rect.y))
-        # line pygame.draw.line(self.surface, (0, 0, 0), (self.ghost_rect.centerx + 12, self.ghost_rect.centery), (self.mx, self.my), 1)
+        # pygame.draw.line(self.surface, (0, 0, 0), (self.ghost_rect.centerx + 12, self.ghost_rect.centery), (self.mx, self.my), 1)
 
         # Cursor displaying
         self.surface.blit(self.cursor, (self.mx, self.my))

@@ -12,11 +12,11 @@ class Gun:
         # Stats
         self.dmg = (5, 15)
         self.ammo_capacity = 10
-        self.recoil = 30
+        self.recoil = 0
         self.fire_rate = 100
 
         # Gun sprite init
-        self.gun_sprite = pygame.image.load('game_files/sprites/test/gun_1.png')
+        self.gun_sprite = pygame.image.load('game_files/sprites/guns/gun/gun.png')
         self.gun_rect = self.gun_sprite.get_rect(topleft=init_pos)
 
         # Surface

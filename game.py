@@ -40,16 +40,13 @@ class Game:
             # Scaling surface on the screen size
             self.screen.blit(pygame.transform.scale(self.surface, (settings.WIDTH, settings.HEIGHT)), (0, 0))
 
-            self.surface.fill((100, 100, 100))
+            self.surface.fill((121, 203, 207))
 
             # Level rendering
             self.level.back_render()
 
             # Pickups level rendering
             self.level.pickups_render()
-
-            # Ninja collisions test
-            self.ninja.pickup_collision(self.level.pickups)
 
             # Ninja rendering
             self.ninja.render()
@@ -63,6 +60,9 @@ class Game:
             # UI renders (hp bar, energy bar)
             self.hp_bar.render(self.ninja.hp, self.scale_factor)
             self.energy_bar.render(self.ninja.energy, self.scale_factor)
+
+            # Ninja collisions test
+            self.ninja.pickup_collision(self.level.pickups)
 
             # Level collisions test
             self.level.obj_proj_collision(self.ninja.projectiles)

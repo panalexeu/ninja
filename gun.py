@@ -1,17 +1,34 @@
+import random
+
 import pygame
 
+import colors
 import projectile
 
 
 class Gun:
 
-    def __init__(self):
+    def __init__(self, init_pos, surface):
         # Stats
-        self.damage = 10
+        self.dmg = (5, 15)
         self.ammo_capacity = 10
         self.recoil = 30
+        self.fire_rate = 100
+
+        # Gun sprite init
         self.gun_sprite = pygame.image.load('game_files/sprites/test/gun_1.png')
+        self.gun_rect = self.gun_sprite.get_rect(topleft=init_pos)
 
-    def shot(self, init_pos, final_pos, surface):
-        return projectile.Projectile(init_pos, final_pos, surface)
+        # Surface
+        self.surface = surface
 
+        # Positions variables
+        self.x_factor = 12
+        self.y_factor = -4
+
+    def gun_pos(self, x, y):
+        self.gun_rect.x = x + self.x_factor
+        self.gun_rect.y = y + self.y_factor
+
+    def shot(self, init_pos, final_pos):
+        return projectile.Projectile(init_pos, final_pos, self.surface, random.randint(*self.dmg))

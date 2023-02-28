@@ -2,42 +2,54 @@ import math
 
 import pygame
 
+
 class Projectile:
 
-    def __init__(self, init_pos, final_pos, surface):
+    def __init__(self, init_pos, final_pos, surface, dmg):
         # Stats
-        self.speed = 1
+        self.cooldown = 100
+        self.speed = 5
         self.delta_time = 4
+        self.dmg = dmg
 
         # Surface
         self.surface = surface
 
+        # For calculation
         self.init_pos = init_pos
         self.final_pos = final_pos
-        self.projectile_sprite = pygame.image.load('game_files/sprites/test/cursor.png')
+        self.dist = None
+        self.delta_x = None
+        self.delta_y = None
 
-    def move(self):
+        self.proj_sprite = pygame.image.load('game_files/sprites/projectile/fancy_proj.png')
+        self.proj_rect = self.proj_sprite.get_rect(topleft=(init_pos))
+
+    def path_calculation(self):
         rel_x = self.init_pos[0] - self.final_pos[0]
         rel_y = self.init_pos[1] - self.final_pos[1]
 
         # Calculates diagonal distance and angle from entity rect to destination rect
-        dist = math.sqrt(rel_x ** 2 + rel_y ** 2)
+        self.dist = math.sqrt(rel_x ** 2 + rel_y ** 2)
         angle = math.atan2(-rel_y, -rel_x)
 
         # Divides distance to value that later gives apropriate delta x and y for the given speed
         # there needs to be at least +2 at the end for it to work with all speeds
-        delta_dist = dist / (self.speed * self.delta_time) + 5
+        delta_dist = self.dist / (self.speed * self.delta_time) + 5
 
         # If delta_dist is greater than dist entety movement is jittery
-        if delta_dist > dist:
-            delta_dist = dist
+        if delta_dist > self.dist:
+            delta_dist = self.dist
 
         # Calculates delta x and y
-        delta_x = math.cos(angle) * (delta_dist)
-        delta_y = math.sin(angle) * (delta_dist)
+        self.delta_x = math.cos(angle) * delta_dist
+        self.delta_y = math.sin(angle) * delta_dist
 
-        if dist > 0:
-            self.init_pos[0] += delta_x
-            self.init_pos[1] += delta_y
+    def move(self):
+        self.path_calculation()
 
-        self.surface.blit(self.projectile_sprite, (self.init_pos[0], self.init_pos[1]))
+        if self.dist > 0:
+            self.proj_rect.x += self.delta_x
+            self.proj_rect.y += self.delta_y
+
+        self.surface.blit(self.proj_sprite, (self.proj_rect.x, self.proj_rect.y))

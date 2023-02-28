@@ -7,6 +7,7 @@ import revolver
 import hp_pickup
 import energy_pickup
 
+
 class Ninja:
 
     def __init__(self, surface, init_pos):
@@ -24,7 +25,7 @@ class Ninja:
         self.ghost_rect = self.frame.get_rect(topleft=init_pos)
 
         # Player cursor load
-        self.cursor = pygame.image.load('game_files/sprites/mouse/cursor.png')
+        self.cursor = pygame.image.load('game_files/sprites/mouse/ghost_cursor.png')
         # self.cursor_rect = self.cursor.get_rect()
 
         # Gun init
@@ -141,6 +142,8 @@ class Ninja:
 
     def move(self):
         # Movement handling
+        # self.ghost_rect.x += self.direction.x * self.speed * self.roll_factor
+        # self.ghost_rect.y += self.direction.y * self.speed * self.roll_factor
         self.ghost_rect.center += self.direction * self.speed * self.roll_factor
 
         # Ghost animation handling
@@ -186,6 +189,17 @@ class Ninja:
                     self.energy += pickup_obj.energy_factor
                 pickup_objects.remove(pickup_obj)
 
+    def objects_collision(self, objects):
+        for obj in objects:
+            if self.ghost_rect.colliderect(obj.rect):
+                if self.direction.x > 0:
+                    self.ghost_rect.right = obj.rect.left
+                elif self.direction.x < 0:
+                    self.ghost_rect.left = obj.rect.right
+                if self.direction.y < 0:
+                    self.ghost_rect.top = obj.rect.bottom
+                if self.direction.y > 0:
+                    self.ghost_rect.bottom = obj.rect.top
     def ghost_projectiles(self):
         # Projectiles render and handling
         for projectile in self.projectiles:

@@ -1,6 +1,7 @@
 import pygame
 
 import settings
+import colors
 import level
 import ninja
 import hp_bar
@@ -29,21 +30,21 @@ class Game:
         self.level = level.Level(self.surface)
 
         # Ninja init
-        self.ninja = ninja.Ninja(self.surface, (-8, -8))  # (-8, -8) left corner coordinates for the sprite centre
+        self.ninja = ninja.Ninja(self.surface, (64, 64))  # (-8, -8) left corner coordinates for the sprite centre
 
         # UI inits (hp bar, energy bar)
-        self.hp_bar = hp_bar.HpBar(self.surface, (1, 0))
-        self.energy_bar = energy_bar.EnergyBar(self.surface, (1, 9 * self.scale_factor))
+        self.hp_bar = hp_bar.HpBar(self.surface, (32, 3))
+        self.energy_bar = energy_bar.EnergyBar(self.surface, (360, 3))
 
     def run(self):
         while True:
             # Scaling surface on the screen size
             self.screen.blit(pygame.transform.scale(self.surface, (settings.WIDTH, settings.HEIGHT)), (0, 0))
 
-            self.surface.fill((121, 203, 207))
+            self.surface.fill((221, 134, 70))
 
             # Level rendering
-            self.level.back_render()
+            self.level.render()
 
             # Pickups level rendering
             self.level.pickups_render()
@@ -62,10 +63,12 @@ class Game:
             self.energy_bar.render(self.ninja.energy, self.scale_factor)
 
             # Ninja collisions test
+            self.ninja.objects_collision(self.level.back_objects)
             self.ninja.pickup_collision(self.level.pickups)
 
             # Level collisions test
             self.level.obj_proj_collision(self.ninja.projectiles)
+            self.level.wall_proj_collision(self.ninja.projectiles)
             self.level.enemy_proj_collision(self.ninja.projectiles)
 
             pygame.display.update()

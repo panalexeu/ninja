@@ -43,6 +43,8 @@ class Game:
 
             self.surface.fill((221, 134, 70))
 
+            self.level.back_render()
+
             # Level rendering
             self.level.render()
 
@@ -63,7 +65,7 @@ class Game:
             self.energy_bar.render(self.ninja.energy, self.scale_factor)
 
             # Ninja collisions test
-            self.ninja.objects_collision(self.level.back_objects)
+            self.ninja.objects_collision(self.level.collide_objects())
             self.ninja.pickup_collision(self.level.pickups)
 
             # Level collisions test
